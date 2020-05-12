@@ -1,5 +1,5 @@
 {
-  "name": "token_sdk_client",
+  "name": "token-sdk-client",
   "version": "0.0.0",
   "description": "token sdk client description.",
   "main": "index.js",
@@ -23,5 +23,25 @@
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/feigebaobei/tokenSDKClient/issues"
+  },
+  "dependencies": {
+    "axios": "^0.19.2",
+    "bn.js": "^4.11.8",
+    "elliptic": "^6.5.2",
+    "gm-crypt": "0.0.2",
+    "hash.js": "^1.1.7",
+    "hmac-drbg": "^1.0.1",
+    "inherits": "^2.0.4"
+  },
+  "devDependencies": {
+    "eslint": "^7.0.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-config-standard": "^14.1.1",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-react": "^7.19.0",
+    "eslint-plugin-standard": "^4.0.1",
+    "eslint-plugin-vue": "^6.2.2"
   }
 }

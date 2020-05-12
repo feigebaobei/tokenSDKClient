@@ -1,5 +1,4 @@
 // const sm = require('./lib/sm.js')
-// const sm2 = 
 const sm = require('./lib/index.js')
 const axios = require('axios')
 // const sm4 = require('sm-crypto').sm4;
@@ -7,10 +6,10 @@ const axios = require('axios')
 // 这里使用非常暴力的方式安装sm2.js依赖的elliptic
 // var elliptic = require('elliptic');
 // elliptic.curve.short.call(this, params);
-var EC = require('elliptic').ec;
-var ec = new EC('secp256k1');
-var key = ec.genKeyPair();
-console.log('测试elliptic是否被安装', key)
+// var EC = require('elliptic').ec;
+// var ec = new EC('secp256k1');
+// var key = ec.genKeyPair();
+// console.log('测试elliptic是否被安装', key)
 
 var hashStr = 'c888c9ce9e098d5864d3ded6ebcc140a12142263bace3a23a36f9905f12bd64a' // 与go代码里一样的字符串
 var priStr = '55c974f17a0b44178d982dcd478150b8a4c0f206f397d7880d06bf5a72932b81'
@@ -18,6 +17,7 @@ var sm2 = sm.sm2
 
 // main()
 function main() {
+  console.log('start main')
   test0()
   test1()
   test2()
@@ -42,20 +42,22 @@ function test0() {
 
 // 使用自动生成的私钥
 function test1() {
+  console.log('start test1')
   var keyesAuto = sm2.genKeyPair()
-  // console.log('keyesAuto', keyesAuto)
+  console.log('keyesAuto', keyesAuto)
   var ct = keyesAuto.encrypt(hashStr)
-  console.log('ct:', `[${ct.join(', ')}]`)
-  // ct: [246, 106, 106, 40, 249, 239, 104, 205, 94, 25, 74, 123, 117, 222, 186, 157, 161, 54, 72, 5, 161, 55, 231, 22, 35, 1, 41, 120, 226, 18, 197, 95, 143, 44, 190, 238, 171, 248, 247, 163, 91, 234, 30, 56, 158, 201, 3, 172, 214, 151, 42, 167, 104, 91, 90, 12, 34, 99, 41, 73, 16, 156, 197, 27, 253, 36, 73, 156, 146, 2, 200, 250, 44, 127, 17, 67, 162, 208, 186, 195, 225, 179, 163, 180, 116, 102, 126, 226, 35, 154, 39, 58, 206, 129, 255, 188, 61, 178, 253, 3, 203, 218, 136, 187, 226, 146, 186, 169, 2, 171, 209, 211, 186, 73, 67, 86, 61, 69, 97, 52, 88, 225, 75, 208, 231, 225, 45, 118, 46, 15, 250, 16, 193, 84, 3, 152, 135, 81, 63, 19, 170, 94, 178, 101, 148, 187, 41, 86, 30, 219, 31, 72, 230, 44, 144, 144, 155, 171, 205, 173]
-  var mt = keyesAuto.decrypt(ct)
-  console.log('mt:', `[${mt.join(', ')}]`)
-  // mt: [99, 56, 56, 56, 99, 57, 99, 101, 57, 101, 48, 57, 56, 100, 53, 56, 54, 52, 100, 51, 100, 101, 100, 54, 101, 98, 99, 99, 49, 52, 48, 97, 49, 50, 49, 52, 50, 50, 54, 51, 98, 97, 99, 101, 51, 97, 50, 51, 97, 51, 54, 102, 57, 57, 48, 53, 102, 49, 50, 98, 100, 54, 52, 97]
-  var signData = keyesAuto.signSha512(hashStr)
-  console.log('signData:', signData)
-  // signData: {r: "8fa4acb8ed782e0aadd2a03c49ab60abe3a1ad625c17f7207294762dbdcf63bd", s: "a1899998f6d57b6e9eb7c133f07032a910c5acf0b53c58b2cccd0755ff78afed"}
-  var isok = keyesAuto.verify512(hashStr, signData.r, signData.s)
-  console.log('isok:', isok)
-  // isok: true
+  console.log('ct', ct)
+  // console.log('ct:', `[${ct.join(', ')}]`)
+  // // ct: [246, 106, 106, 40, 249, 239, 104, 205, 94, 25, 74, 123, 117, 222, 186, 157, 161, 54, 72, 5, 161, 55, 231, 22, 35, 1, 41, 120, 226, 18, 197, 95, 143, 44, 190, 238, 171, 248, 247, 163, 91, 234, 30, 56, 158, 201, 3, 172, 214, 151, 42, 167, 104, 91, 90, 12, 34, 99, 41, 73, 16, 156, 197, 27, 253, 36, 73, 156, 146, 2, 200, 250, 44, 127, 17, 67, 162, 208, 186, 195, 225, 179, 163, 180, 116, 102, 126, 226, 35, 154, 39, 58, 206, 129, 255, 188, 61, 178, 253, 3, 203, 218, 136, 187, 226, 146, 186, 169, 2, 171, 209, 211, 186, 73, 67, 86, 61, 69, 97, 52, 88, 225, 75, 208, 231, 225, 45, 118, 46, 15, 250, 16, 193, 84, 3, 152, 135, 81, 63, 19, 170, 94, 178, 101, 148, 187, 41, 86, 30, 219, 31, 72, 230, 44, 144, 144, 155, 171, 205, 173]
+  // var mt = keyesAuto.decrypt(ct)
+  // console.log('mt:', `[${mt.join(', ')}]`)
+  // // mt: [99, 56, 56, 56, 99, 57, 99, 101, 57, 101, 48, 57, 56, 100, 53, 56, 54, 52, 100, 51, 100, 101, 100, 54, 101, 98, 99, 99, 49, 52, 48, 97, 49, 50, 49, 52, 50, 50, 54, 51, 98, 97, 99, 101, 51, 97, 50, 51, 97, 51, 54, 102, 57, 57, 48, 53, 102, 49, 50, 98, 100, 54, 52, 97]
+  // var signData = keyesAuto.signSha512(hashStr)
+  // console.log('signData:', signData)
+  // // signData: {r: "8fa4acb8ed782e0aadd2a03c49ab60abe3a1ad625c17f7207294762dbdcf63bd", s: "a1899998f6d57b6e9eb7c133f07032a910c5acf0b53c58b2cccd0755ff78afed"}
+  // var isok = keyesAuto.verify512(hashStr, signData.r, signData.s)
+  // console.log('isok:', isok)
+  // // isok: true
 }
 
 // 使用原版sm2.js的方法
@@ -67,6 +69,11 @@ function test2() {
   var isok = keyes.verify(hashStr, sign.r, sign.s)
   console.log('isok:', isok)
   // isok: true
+  var ct = keyes.encrypt(hashStr)
+  console.log('ct:', `[${ct.join(', ')}]`)
+  var mt = keyes.decrypt(ct)
+  // console.log('mt:', `[${mt.join(', ')}]`)
+  console.log('mt', mt)
 }
 
 /**
@@ -107,11 +114,21 @@ function getPubByDid (did) {
   }
   reqBody.params.push(did)
   return instance.get(did, {params: reqBody})
-  // .then((res) => {
-  //   console.log('res', res)
-  // }).catch((err) => {
-  //   console.log('err', err)
-  // })
+}
+
+/**
+ * 生成密钥对
+ * @param  {[type]} priStr [description]
+ * @return {[type]}        [description]
+ */
+function genKey(priStr) {
+  var keyes = sm2.genKeyPair(priStr)
+  console.log('keyes', keyes.pri.toString(16), keyes.pub.x.toString(16), keyes.pub.y.toString(16))
+  var ct = keyes.encrypt(hashStr)
+  console.log('ct', ct)
+  var mt = keyes.decrypt(ct)
+  console.log('mt:', `[${mt.join(', ')}]`)
+  return ct
 }
 
 
@@ -173,12 +190,13 @@ function bytesToStrHex(arr) {
 // 解密pvdata
 function decryptPvData (ct, priStr) {
   var keyesDefine = sm2.genKeyPair(priStr)
-  console.log(keyesDefine)
+  console.log(keyesDefine, keyesDefine.pub.x.toString(16), keyesDefine.pub.y.toString(16))
+  // console.log(keyesDefine)
   // ct = keyesDefine.encrypt('hashStr')
   // console.log(ct)
-  var mt = keyesDefine.decrypt(ct)
-  console.log(mt)
-  return mt
+  // var mt = keyesDefine.decrypt(ct)
+  // console.log(mt)
+  // return mt
 }
 
 module.exports = {
@@ -189,6 +207,7 @@ module.exports = {
   fn,
   getPubByDid,
   sm2,
+  // sm3,
   // sm4,
   bytesToStrHex,
   createIdCertify,
@@ -198,7 +217,8 @@ module.exports = {
   validateCommonCertify,
   checkCommonCertify,
   cancelCheckCommonCertify,
-  decryptPvData
+  decryptPvData,
+  genKey
 }
 
 
