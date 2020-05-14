@@ -1,6 +1,6 @@
 {
   "name": "token-sdk-client",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "token sdk client description.",
   "main": "index.js",
   "directories": {
