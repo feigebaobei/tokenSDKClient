@@ -1,7 +1,11 @@
 // const sm = require('./lib/sm.js')
 const sm = require('./lib/index.js')
-const axios = require('axios')
+// const axios = require('axios')
 // const sm4 = require('sm-crypto').sm4;
+const sm4 = require('gm-crypt').sm4;
+// const instance = require('./lib/instanceAxios')
+import instance from './lib/instanceAxios'
+import utils from './lib/utils'
 
 // 这里使用非常暴力的方式安装sm2.js依赖的elliptic
 // var elliptic = require('elliptic');
@@ -27,7 +31,7 @@ function main() {
 function test0() {
   var keyesDefine = sm2.genKeyPair(priStr)
   var ct = keyesDefine.encrypt(hashStr)
-  console.log('ct:', `[${ct.join(', ')}]`)
+  console.log('ct:', ct, `[${ct.join(', ')}]`)
   // ct: [246, 106, 106, 40, 249, 239, 104, 205, 94, 25, 74, 123, 117, 222, 186, 157, 161, 54, 72, 5, 161, 55, 231, 22, 35, 1, 41, 120, 226, 18, 197, 95, 143, 44, 190, 238, 171, 248, 247, 163, 91, 234, 30, 56, 158, 201, 3, 172, 214, 151, 42, 167, 104, 91, 90, 12, 34, 99, 41, 73, 16, 156, 197, 27, 253, 36, 73, 156, 146, 2, 200, 250, 44, 127, 17, 67, 162, 208, 186, 195, 225, 179, 163, 180, 116, 102, 126, 226, 35, 154, 39, 58, 206, 129, 255, 188, 61, 178, 253, 3, 203, 218, 136, 187, 226, 146, 186, 169, 2, 171, 209, 211, 186, 73, 67, 86, 61, 69, 97, 52, 88, 225, 75, 208, 231, 225, 45, 118, 46, 15, 250, 16, 193, 84, 3, 152, 135, 81, 63, 19, 170, 94, 178, 101, 148, 187, 41, 86, 30, 219, 31, 72, 230, 44, 144, 144, 155, 171, 205, 173]
   var mt = keyesDefine.decrypt(ct)
   console.log('mt:', `[${mt.join(', ')}]`)
@@ -80,15 +84,15 @@ function test2() {
  * axios的实例
  * @type {[type]}
  */
-const instance = axios.create({
-  baseURL: 'http://47.95.242.110:8587',
-  timeout: 5000,
-  headers: {
-    'Content-Type': 'application/json',
-    // 'Content-Type': 'application/x-www-form-urlencoded',
-    'keyli': 'valueli'
-  }
-})
+// const instance = axios.create({
+//   baseURL: 'http://47.95.242.110:8587',
+//   timeout: 5000,
+//   headers: {
+//     'Content-Type': 'application/json',
+//     // 'Content-Type': 'application/x-www-form-urlencoded',
+//     'keyli': 'valueli'
+//   }
+// })
 
 /**
  * 用于测试的方法
@@ -132,6 +136,49 @@ function genKey(priStr) {
 }
 
 
+/**
+ * 获得keystore
+ * @return {[type]} [description]
+ */
+function getKeyStore (did) {
+  return instance({
+    url: `/did/keystore/${did}`,
+    method: 'get'
+  })
+}
+function decryptKeyStore (ct, key) {
+  // let sm4 = this.sm4({
+  let sm4 = new this.sm4({
+    key: 'JeF8U9wHFOMfs2Y8', // key
+    mode: 'cbc',
+    iv: 'UISwD9fW6cFh9SNS',
+    cipherType: 'base64'
+  })
+  console.log('key', key)
+  return sm4.decrypt(ct)
+}
+/**
+ * 获得pvdata
+ * @return {[type]} [description]
+ */
+function getPvData (did) {
+  return instance({
+    url: `/did/pvdata/${did}`,
+    method: 'get'
+  })
+}
+function decryptPvData (ct, pri) {
+  let keyes = null
+  if (typeof(pri) === 'string') {
+    keyes = sm2.genKeyPair(pri)
+  } else {
+    keyes = pri
+  }
+  var mt = keyes.decrypt(ct)
+  mt = utils.asciiToStr(mt)
+  mt = JSON.parse(mt)
+  return mt
+}
 /**
  * 创建身份证书
  * @return {[type]} [description]
@@ -188,18 +235,43 @@ function bytesToStrHex(arr) {
 }
 
 // 解密pvdata
-function decryptPvData (ct, priStr) {
-  var keyesDefine = sm2.genKeyPair(priStr)
-  console.log(keyesDefine, keyesDefine.pub.x.toString(16), keyesDefine.pub.y.toString(16))
-  // console.log(keyesDefine)
-  // ct = keyesDefine.encrypt('hashStr')
-  // console.log(ct)
-  // var mt = keyesDefine.decrypt(ct)
-  // console.log(mt)
-  // return mt
-}
+// function decryptPvData (ct, priStr) {
+//   var keyesDefine = sm2.genKeyPair(priStr)
+//   console.log(keyesDefine, keyesDefine.pub.x.toString(16), keyesDefine.pub.y.toString(16))
+//   // console.log(keyesDefine)
+//   // ct = keyesDefine.encrypt('hashStr')
+//   // console.log(ct)
+//   // var mt = keyesDefine.decrypt(ct)
+//   // console.log(mt)
+//   // return mt
+// }
 
-module.exports = {
+// module.exports = {
+//   main,
+//   test0,
+//   test1,
+//   test2,
+//   fn,
+//   getPubByDid,
+//   sm2,
+//   // sm3,
+//   sm4,
+//   getKeyStore,
+//   decryptKeyStore,
+//   getPvData,
+//   decryptPvData,
+//   bytesToStrHex,
+//   createIdCertify,
+//   validateIdCertify,
+//   cancelIdCertify,
+//   createCommonCertify,
+//   validateCommonCertify,
+//   checkCommonCertify,
+//   cancelCheckCommonCertify,
+//   genKey
+// }
+
+export default {
   main,
   test0,
   test1,
@@ -208,7 +280,11 @@ module.exports = {
   getPubByDid,
   sm2,
   // sm3,
-  // sm4,
+  sm4,
+  getKeyStore,
+  decryptKeyStore,
+  getPvData,
+  decryptPvData,
   bytesToStrHex,
   createIdCertify,
   validateIdCertify,
@@ -217,8 +293,5 @@ module.exports = {
   validateCommonCertify,
   checkCommonCertify,
   cancelCheckCommonCertify,
-  decryptPvData,
   genKey
 }
-
-
