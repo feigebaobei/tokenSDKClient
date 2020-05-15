@@ -1,6 +1,6 @@
 {
   "name": "token-sdk-client",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "token sdk client description.",
   "main": "index.js",
   "directories": {
@@ -32,6 +32,7 @@
     "hash.js": "^1.1.7",
     "hmac-drbg": "^1.0.1",
     "inherits": "^2.0.4",
+    "js-base64": "^2.5.2",
     "sm-crypto": "^0.1.1"
   },
   "devDependencies": {

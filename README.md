@@ -2,7 +2,7 @@
 
 现在tokenSDKClient还在开发阶段，不建议大家使用。
 与链节点云服务协同工作的前端代码包。
-它的兄弟版本有`tokenSDKServer`。这个版本是在服务端使用的。
+它有一个在服务端使用的兄弟版本：`tokenSDKServer`。
 
 主要包括：sm2/sm3/sm4/aes
 
