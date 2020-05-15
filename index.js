@@ -190,6 +190,9 @@ function decryptPvData (ct, pri) {
   mt = JSON.parse(mt)
   return mt
 }
+function getDidList (phone) {
+  return instance.get(`/node/vcode/${phone}`)
+}
 /**
  * 创建身份证书
  * @return {[type]} [description]
@@ -296,6 +299,7 @@ export default {
   decryptKeyStore,
   getPvData,
   decryptPvData,
+  getDidList,
   bytesToStrHex,
   createIdCertify,
   validateIdCertify,
