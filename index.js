@@ -6,7 +6,7 @@ const sm4 = require('gm-crypt').sm4;
 // const instance = require('./lib/instanceAxios')
 import instance from './lib/instanceAxios'
 import utils from './lib/utils'
-import {Base64} from 'js-base64'
+// import {Base64} from 'js-base64'
 
 // 这里使用非常暴力的方式安装sm2.js依赖的elliptic
 // var elliptic = require('elliptic');
@@ -142,8 +142,13 @@ function genKey(priStr) {
  * @return {[type]} [description]
  */
 function getKeyStore (did) {
+  let url = '/did/keystore/' + did
+  console.log('url', url)
   return instance({
-    url: `/did/keystore/${Base64.encode(did)}`,
+    // url: `/did/keystore/${Base64.encode(did).substr(0, 8)}`,
+    // url: `/did/keystore/${Base64.encode(did)}`,
+    // url: `/did/keystore/${did}`,
+    url: url,
     method: 'get'
   })
 }
@@ -163,8 +168,13 @@ function decryptKeyStore (ct, key) {
  * @return {[type]} [description]
  */
 function getPvData (did) {
+  let url = '/did/pvdata/' + did
+  console.log('url', url)
   return instance({
-    url: `/did/pvdata/${Base64.encode(did)}`,
+    // url: `/did/pvdata/${Base64.encode(did).substr(0, 8)}`,
+    // url: `/did/pvdata/${Base64.encode(did)}`,
+    // url: `/did/pvdata/${did}`,
+    url: url,
     method: 'get'
   })
 }
