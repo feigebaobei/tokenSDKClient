@@ -120,14 +120,17 @@ function genKey(priStr) {
  * @return {[type]} [description]
  */
 function getKeyStore (did) {
-  let url = '/did/keystore/' + did
+  let url = '/did/keystore/' // + did
   // console.log('url', url)
   return instance({
     // url: `/did/keystore/${Base64.encode(did).substr(0, 8)}`,
     // url: `/did/keystore/${Base64.encode(did)}`,
     // url: `/did/keystore/${did}`,
     url: url,
-    method: 'get'
+    method: 'get',
+    params: {
+      did: did
+    }
   })
 }
 /**
@@ -152,14 +155,17 @@ function decryptKeyStore (ct, key) {
  * @return {[type]} [description]
  */
 function getPvData (did) {
-  let url = '/did/pvdata/' + did
+  let url = '/did/pvdata/' // + did
   // console.log('url', url)
   return instance({
     // url: `/did/pvdata/${Base64.encode(did).substr(0, 8)}`,
     // url: `/did/pvdata/${Base64.encode(did)}`,
     // url: `/did/pvdata/${did}`,
     url: url,
-    method: 'get'
+    method: 'get',
+    params: {
+      did: did
+    }
   })
 }
 /**
