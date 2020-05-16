@@ -1,19 +1,22 @@
-# tokenSDKClient
+# token-sdk-client
 
 现在tokenSDKClient还在开发阶段，不建议大家使用。
 与链节点云服务协同工作的前端代码包。
-它有一个在服务端使用的兄弟版本：`tokenSDKServer`。
+它有一个在服务端使用的兄弟版本：`token-sdk-server`。
 
 主要包括：sm2/sm3/sm4/aes
 
 ## sm2
 
 需要的依赖：
-"bn.js": "^4.11.8",
-"elliptic": "^6.5.2",
-"hash.js": "^1.1.7",
-"hmac-drbg": "^1.0.1",
-"inherits": "^2.0.4"
+
+|包名|版本号|
+|-|-|
+|"bn.js"|"^4.11.8",|
+|"elliptic"|"^6.5.2",|
+|"hash.js"|"^1.1.7",|
+|"hmac-drbg"|"^1.0.1",|
+|"inherits"|"^2.0.4"|
 
 sm2部分是基于`sm2.js`做的。
 

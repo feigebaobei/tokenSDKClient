@@ -8,14 +8,6 @@ import instance from './lib/instanceAxios'
 import utils from './lib/utils'
 // import {Base64} from 'js-base64'
 
-// 这里使用非常暴力的方式安装sm2.js依赖的elliptic
-// var elliptic = require('elliptic');
-// elliptic.curve.short.call(this, params);
-// var EC = require('elliptic').ec;
-// var ec = new EC('secp256k1');
-// var key = ec.genKeyPair();
-// console.log('测试elliptic是否被安装', key)
-
 var hashStr = 'c888c9ce9e098d5864d3ded6ebcc140a12142263bace3a23a36f9905f12bd64a' // 与go代码里一样的字符串
 var priStr = '55c974f17a0b44178d982dcd478150b8a4c0f206f397d7880d06bf5a72932b81'
 var sm2 = sm.sm2
@@ -82,20 +74,6 @@ function test2() {
 }
 
 /**
- * axios的实例
- * @type {[type]}
- */
-// const instance = axios.create({
-//   baseURL: 'http://47.95.242.110:8587',
-//   timeout: 5000,
-//   headers: {
-//     'Content-Type': 'application/json',
-//     // 'Content-Type': 'application/x-www-form-urlencoded',
-//     'keyli': 'valueli'
-//   }
-// })
-
-/**
  * 用于测试的方法
  * @return {Function} [description]
  */
@@ -143,7 +121,7 @@ function genKey(priStr) {
  */
 function getKeyStore (did) {
   let url = '/did/keystore/' + did
-  console.log('url', url)
+  // console.log('url', url)
   return instance({
     // url: `/did/keystore/${Base64.encode(did).substr(0, 8)}`,
     // url: `/did/keystore/${Base64.encode(did)}`,
@@ -152,6 +130,12 @@ function getKeyStore (did) {
     method: 'get'
   })
 }
+/**
+ * 解密keyStore
+ * @param  {[type]} ct  [description]
+ * @param  {[type]} key [description]
+ * @return {[type]}     [description]
+ */
 function decryptKeyStore (ct, key) {
   // let sm4 = this.sm4({
   let sm4 = new this.sm4({
@@ -169,7 +153,7 @@ function decryptKeyStore (ct, key) {
  */
 function getPvData (did) {
   let url = '/did/pvdata/' + did
-  console.log('url', url)
+  // console.log('url', url)
   return instance({
     // url: `/did/pvdata/${Base64.encode(did).substr(0, 8)}`,
     // url: `/did/pvdata/${Base64.encode(did)}`,
@@ -178,6 +162,12 @@ function getPvData (did) {
     method: 'get'
   })
 }
+/**
+ * 解密pvData
+ * @param  {[type]} ct  [description]
+ * @param  {[type]} pri [description]
+ * @return {[type]}     [description]
+ */
 function decryptPvData (ct, pri) {
   let keyes = null
   if (typeof(pri) === 'string') {
@@ -190,9 +180,29 @@ function decryptPvData (ct, pri) {
   mt = JSON.parse(mt)
   return mt
 }
+/**
+ * 获得didList
+ * @param  {[type]} phone [description]
+ * @return {[type]}       [description]
+ */
 function getDidList (phone) {
-  return instance.get(`/node/vcode/${phone}`)
+  return instance.get(`/node/udidList`)
 }
+/**
+ * 请求验证码
+ * @param  {[type]} phone [description]
+ * @return {[type]}       [description]
+ */
+function getCheckCode (phone) {
+  // return instance.get(`/node/vcode/${phone}`)
+  return instance({
+    url: `/node/vcode/${phone}`
+  })
+}
+
+
+
+
 /**
  * 创建身份证书
  * @return {[type]} [description]
@@ -247,18 +257,6 @@ function bytesToStrHex(arr) {
   }
   return str
 }
-
-// 解密pvdata
-// function decryptPvData (ct, priStr) {
-//   var keyesDefine = sm2.genKeyPair(priStr)
-//   console.log(keyesDefine, keyesDefine.pub.x.toString(16), keyesDefine.pub.y.toString(16))
-//   // console.log(keyesDefine)
-//   // ct = keyesDefine.encrypt('hashStr')
-//   // console.log(ct)
-//   // var mt = keyesDefine.decrypt(ct)
-//   // console.log(mt)
-//   // return mt
-// }
 
 // module.exports = {
 //   main,
