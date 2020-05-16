@@ -59,16 +59,16 @@ function test1() {
 
 // 使用原版sm2.js的方法
 function test2() {
-  var keyes = sm2.genKeyPair()
-  var sign = keyes.sign(hashStr)
+  var keys = sm2.genKeyPair()
+  var sign = keys.sign(hashStr)
   console.log('sign:', sign)
   // sign: {r: "64590e43b91e7a6c1249c9f3e19cb1f84e9fe56160d9f502a764e856193c9336", s: "2063cb56b981581a333b11ade303106c6c388a86955a01915ee5e6cfcba8faab"}
-  var isok = keyes.verify(hashStr, sign.r, sign.s)
+  var isok = keys.verify(hashStr, sign.r, sign.s)
   console.log('isok:', isok)
   // isok: true
-  var ct = keyes.encrypt(hashStr)
+  var ct = keys.encrypt(hashStr)
   console.log('ct:', `[${ct.join(', ')}]`)
-  var mt = keyes.decrypt(ct)
+  var mt = keys.decrypt(ct)
   // console.log('mt:', `[${mt.join(', ')}]`)
   console.log('mt', mt)
 }
@@ -105,11 +105,11 @@ function getPubByDid (did) {
  * @return {[type]}        [description]
  */
 function genKey(priStr) {
-  var keyes = sm2.genKeyPair(priStr)
-  console.log('keyes', keyes.pri.toString(16), keyes.pub.x.toString(16), keyes.pub.y.toString(16))
-  var ct = keyes.encrypt(hashStr)
+  var keys = sm2.genKeyPair(priStr)
+  console.log('keys', keys.pri.toString(16), keys.pub.x.toString(16), keys.pub.y.toString(16))
+  var ct = keys.encrypt(hashStr)
   console.log('ct', ct)
-  var mt = keyes.decrypt(ct)
+  var mt = keys.decrypt(ct)
   console.log('mt:', `[${mt.join(', ')}]`)
   return ct
 }
@@ -169,13 +169,13 @@ function getPvData (did) {
  * @return {[type]}     [description]
  */
 function decryptPvData (ct, pri) {
-  let keyes = null
+  let keys = null
   if (typeof(pri) === 'string') {
-    keyes = sm2.genKeyPair(pri)
+    keys = sm2.genKeyPair(pri)
   } else {
-    keyes = pri
+    keys = pri
   }
-  var mt = keyes.decrypt(ct)
+  var mt = keys.decrypt(ct)
   mt = utils.asciiToStr(mt)
   mt = JSON.parse(mt)
   return mt
@@ -186,7 +186,13 @@ function decryptPvData (ct, pri) {
  * @return {[type]}       [description]
  */
 function getDidList (phone) {
-  return instance.get(`/node/udidList`)
+  // return instance.get(`/node/udidList`)
+  return instance({
+    url: '/node/udidList',
+    params: {
+      phone: phone
+    }
+  })
 }
 /**
  * 请求验证码
@@ -196,7 +202,10 @@ function getDidList (phone) {
 function getCheckCode (phone) {
   // return instance.get(`/node/vcode/${phone}`)
   return instance({
-    url: `/node/vcode/${phone}`
+    url: `/node/vcode`,
+    params: {
+      phone: phone
+    }
   })
 }
 
@@ -298,6 +307,8 @@ export default {
   getPvData,
   decryptPvData,
   getDidList,
+  getCheckCode,
+
   bytesToStrHex,
   createIdCertify,
   validateIdCertify,
