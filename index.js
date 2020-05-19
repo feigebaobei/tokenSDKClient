@@ -119,13 +119,13 @@ function genKey(priStr) {
  * 获得keystore
  * @return {[type]} [description]
  */
-function getKeyStore (did) {
-  let url = '/did/keystore/' // + did
+function getDidttm (did) {
+  let url = '/did/didttm/' // + did
   // console.log('url', url)
   return instance({
-    // url: `/did/keystore/${Base64.encode(did).substr(0, 8)}`,
-    // url: `/did/keystore/${Base64.encode(did)}`,
-    // url: `/did/keystore/${did}`,
+    // url: `/did/didttm/${Base64.encode(did).substr(0, 8)}`,
+    // url: `/did/didttm/${Base64.encode(did)}`,
+    // url: `/did/didttm/${did}`,
     url: url,
     method: 'get',
     params: {
@@ -139,15 +139,15 @@ function getKeyStore (did) {
  * @param  {[type]} key [description]
  * @return {[type]}     [description]
  */
-function decryptKeyStore (ct, key) {
+function decryptDidttm (ct, key) {
   // let sm4 = this.sm4({
+  key = 'JeF8U9wHFOMfs2Y8'
   let sm4 = new this.sm4({
-    key: 'JeF8U9wHFOMfs2Y8', // key
+    key: key, // key
     mode: 'cbc',
     iv: 'UISwD9fW6cFh9SNS',
     cipherType: 'base64'
   })
-  console.log('key', key)
   return sm4.decrypt(ct)
 }
 /**
@@ -195,6 +195,7 @@ function getDidList (phone) {
   // return instance.get(`/node/udidList`)
   return instance({
     url: '/node/udidList',
+    method: 'get',
     params: {
       phone: phone
     }
@@ -223,7 +224,34 @@ function getCheckCode (phone) {
  * @return {[type]} [description]
  */
 function createIdCertify () {
-
+}
+/**
+ * 根据证书id请求链上的证书指纹数据
+ * @param  {[type]} claim_sn [description]
+ * @return {[type]}          [description]
+ */
+function getCertifyFingerPrint (claim_sn) {
+  return instance({
+    url: '/claim/fingerprint',
+    method: 'get',
+    params: {
+      claim_sn: claim_sn
+    }
+  })
+}
+/**
+ * 根据证书模板id请求证书模板
+ * @param  {[type]} templateId [description]
+ * @return {[type]}            [description]
+ */
+function getTemplate (templateId) {
+  return instance({
+    url: '/claim/template',
+    method: 'get',
+    params: {
+      templateId: templateId
+    }
+  })
 }
 /**
  * 验证身份证书
@@ -283,10 +311,13 @@ function bytesToStrHex(arr) {
 //   sm2,
 //   // sm3,
 //   sm4,
-//   getKeyStore,
-//   decryptKeyStore,
+//   getDidttm,
+//   decryptDidttm,
 //   getPvData,
 //   decryptPvData,
+//   getDidList,
+//   getCheckCode,
+
 //   bytesToStrHex,
 //   createIdCertify,
 //   validateIdCertify,
@@ -308,8 +339,8 @@ export default {
   sm2,
   // sm3,
   sm4,
-  getKeyStore,
-  decryptKeyStore,
+  getDidttm,
+  decryptDidttm,
   getPvData,
   decryptPvData,
   getDidList,
@@ -317,6 +348,8 @@ export default {
 
   bytesToStrHex,
   createIdCertify,
+  getCertifyFingerPrint,
+  getTemplate,
   validateIdCertify,
   cancelIdCertify,
   createCommonCertify,
