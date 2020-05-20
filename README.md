@@ -18,7 +18,7 @@
 |"hmac-drbg"|"^1.0.1",|
 |"inherits"|"^2.0.4"|
 
-sm2部分是基于`sm2.js`做的。
+sm2部分是基于`sm.js`做的。
 
 ### api
 
@@ -155,7 +155,19 @@ function test0() {
 
 ## sm3
 
+### api
 
+### usage
+
+```
+import tokenSDKClient from 'otken-sdk-client'
+var sm3 = tokenSDKClient.sm3
+var msg = 'abc'
+var hash = new sm3()
+var digest = hash.sum(msg)
+console.log(digest)
+// [102, 199, 240, 244, 98, 238, 237, 217, 209, 242, 212, 107, 220, 16, 228, 226, 65, 103, 196, 135, 92, 242, 247, 162, 41, 125, 160, 43, 143, 75, 168, 224]
+```
 
 ## sm4
 

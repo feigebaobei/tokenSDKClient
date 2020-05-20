@@ -11,6 +11,7 @@ import utils from './lib/utils'
 var hashStr = 'c888c9ce9e098d5864d3ded6ebcc140a12142263bace3a23a36f9905f12bd64a' // 与go代码里一样的字符串
 var priStr = '55c974f17a0b44178d982dcd478150b8a4c0f206f397d7880d06bf5a72932b81'
 var sm2 = sm.sm2
+var sm3 = sm.sm3
 
 // main()
 function main() {
@@ -361,7 +362,7 @@ export default {
   fn,
   getPubByDid,
   sm2,
-  // sm3,
+  sm3,
   sm4,
   getDidttm,
   decryptDidttm,
