@@ -283,7 +283,31 @@ function checkCommonCertify () {}
  * @return {[type]} [description]
  */
 function cancelCheckCommonCertify () {}
-
+/**
+ * 取消证书
+ * @param  {[type]} claim_sn [description]
+ * @return {[type]}          [description]
+ */
+function cancelCertify (claim_sn, did, hashCont, endtime, pri) {
+  let keys = null
+  if (typeof(pri) === 'string') {
+    keys = sm2.genKeyPair(pri)
+  } else {
+    keys = pri
+  }
+  let sign = keys.signSha512(`${did}cancel${claim_sn}=${hashCont}end at${endtime}`)
+  return instance({
+    url: '/claim/cancel',
+    method: 'put',
+    data: {
+      did: did,
+      claim_sn: claim_sn,
+      hashCont: hashCont,
+      endtime: endtime,
+      sign: sign
+    }
+  })
+}
 /**
  * 把byte型的数据 => 16进制的字符串
  * @param  {[type]} arr [description]
@@ -356,5 +380,6 @@ export default {
   validateCommonCertify,
   checkCommonCertify,
   cancelCheckCommonCertify,
+  cancelCertify,
   genKey
 }
