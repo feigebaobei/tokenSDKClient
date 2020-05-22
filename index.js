@@ -325,7 +325,28 @@ function bytesToStrHex(arr) {
   }
   return str
 }
-
+function setTemporaryCertifyData (claim_sn, templateId, certifyData, expire, purpose) {
+  return instance({
+    url: '/claim/temporaryCertifyData',
+    method: 'post',
+    data: {
+      claim_sn: claim_sn,
+      templateId: templateId,
+      certifyData: certifyData,
+      expire: expire,
+      purpose: purpose
+    }
+  })
+}
+function getTemporaryCertifyData (temporaryID) {
+  return instance({
+    url: '/claim/temporaryCertifyData',
+    method: 'get',
+    params: {
+      temporaryID: temporaryID
+    }
+  })
+}
 // module.exports = {
 //   main,
 //   test0,
@@ -372,6 +393,8 @@ export default {
   getCheckCode,
 
   bytesToStrHex,
+  setTemporaryCertifyData,
+  getTemporaryCertifyData,
   createIdCertify,
   getCertifyFingerPrint,
   getTemplate,
