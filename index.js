@@ -6,7 +6,7 @@ const sm4 = require('gm-crypt').sm4;
 // const instance = require('./lib/instanceAxios')
 import instance from './lib/instanceAxios'
 import utils from './lib/utils'
-// import {Base64} from 'js-base64'
+import {Base64} from 'js-base64'
 
 var hashStr = 'c888c9ce9e098d5864d3ded6ebcc140a12142263bace3a23a36f9905f12bd64a' // 与go代码里一样的字符串
 var priStr = '55c974f17a0b44178d982dcd478150b8a4c0f206f397d7880d06bf5a72932b81'
@@ -141,7 +141,7 @@ function getDidttm (did) {
  * @return {[type]}     [description]
  */
 function decryptDidttm (ct, key) {
-  // let sm4 = this.sm4({
+  let decode = Base64.decode(ct)
   key = 'JeF8U9wHFOMfs2Y8'
   let sm4 = new this.sm4({
     key: key, // key
@@ -149,7 +149,28 @@ function decryptDidttm (ct, key) {
     iv: 'UISwD9fW6cFh9SNS',
     cipherType: 'base64'
   })
-  return sm4.decrypt(ct)
+  return sm4.decrypt(decode)
+}
+/**
+ * 加密didttm
+ * @param  {[type]} mtStr [description]
+ * @param  {[type]} key   [description]
+ * @return {str}       [description]
+ */
+function encryptDidttm (mtStr, key) {
+  if (typeof(mtStr) !== 'string') {
+    throw new Error('参数不是字符串')
+  }
+  key = 'JeF8U9wHFOMfs2Y8'
+  let sm4 = new this.sm4({
+    key: key,
+    mode: 'cbc',
+    iv: 'UISwD9fW6cFh9SNS',
+    cipherType: 'base64'
+  })
+  let ct = sm4.encrypt(mtStr)
+  let encode = Base64.encode(ct)
+  return encode
 }
 /**
  * 获得pvdata
@@ -310,6 +331,57 @@ function cancelCertify (claim_sn, did, hashCont, endtime, pri) {
   })
 }
 /**
+ * 获取签发证书页面的临时url
+ * @param  {[type]} claim_sn    [description]
+ * @param  {[type]} templateId  [description]
+ * @param  {[type]} certifyData [description]
+ * @return {[type]}             [description]
+ */
+function certifySignUrl (claim_sn, templateId, certifyData) {
+  return instance({
+    url: '/claim/certifySignUrl',
+    method: 'post',
+    data: {
+      claim_sn: claim_sn,
+      templateId: templateId,
+      certifyData: certifyData
+    }
+  })
+}
+/**
+ * 获取签发证书页面的数据
+ * @param  {[type]} certifySignUuid [description]
+ * @return {[type]}                 [description]
+ */
+function getCertifySignData (certifySignUuid) {
+  return instance({
+    url: '/claim/certifySignUrl',
+    method: 'get',
+    params: {
+      certifySignUuid: certifySignUuid
+    }
+  })
+}
+/**
+ * 提交签发
+ * @param  {[type]} certifySignUuid [description]
+ * @return {[type]}                 [description]
+ */
+function signCertify(did, claim_sn, templateId, hashValue, endTime, sign) {
+  return instance({
+    url: '/claim/validate',
+    method: 'post',
+    data: {
+      did: did,
+      claim_sn: claim_sn,
+      templateId: templateId,
+      hashValue: hashValue,
+      endTime: endTime,
+      sign: sign
+    }
+  })
+}
+/**
  * 把byte型的数据 => 16进制的字符串
  * @param  {[type]} arr [description]
  * @return {[type]}     [description]
@@ -387,6 +459,7 @@ export default {
   sm4,
   getDidttm,
   decryptDidttm,
+  encryptDidttm,
   getPvData,
   decryptPvData,
   getDidList,
@@ -405,5 +478,8 @@ export default {
   checkCommonCertify,
   cancelCheckCommonCertify,
   cancelCertify,
+  certifySignUrl,
+  getCertifySignData,
+  signCertify,
   genKey
 }
