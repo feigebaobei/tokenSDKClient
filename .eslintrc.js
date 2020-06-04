@@ -6,7 +6,6 @@ module.exports = {
   },
   extends: [
     'plugin:vue/essential',
-    // 'standard'
     'eslint:recommended'
   ],
   globals: {
@@ -21,7 +20,6 @@ module.exports = {
     'vue'
   ],
   rules: {
-    // semi: 0VVVVVIKKKK
     "no-constant-condition": 0
   }
 }

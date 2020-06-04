@@ -105,15 +105,15 @@ function getPubByDid (did) {
  * @param  {[type]} priStr [description]
  * @return {[type]}        [description]
  */
-function genKey(priStr) {
-  var keys = sm2.genKeyPair(priStr)
-  console.log('keys', keys.pri.toString(16), keys.pub.x.toString(16), keys.pub.y.toString(16))
-  var ct = keys.encrypt(hashStr)
-  console.log('ct', ct)
-  var mt = keys.decrypt(ct)
-  console.log('mt:', `[${mt.join(', ')}]`)
-  return ct
-}
+// function genKey(priStr) {
+//   var keys = sm2.genKeyPair(priStr)
+//   console.log('keys', keys.pri.toString(16), keys.pub.x.toString(16), keys.pub.y.toString(16))
+//   var ct = keys.encrypt(hashStr)
+//   console.log('ct', ct)
+//   var mt = keys.decrypt(ct)
+//   console.log('mt:', `[${mt.join(', ')}]`)
+//   return ct
+// }
 
 
 /**
@@ -135,7 +135,7 @@ function getDidttm (did) {
   })
 }
 /**
- * 解密keyStore
+ * 解密didttm
  * @param  {[type]} ct  [description]
  * @param  {[type]} key [description]
  * @return {[type]}     [description]
@@ -143,13 +143,13 @@ function getDidttm (did) {
 function decryptDidttm (ct, key) {
   let decode = Base64.decode(ct)
   key = 'JeF8U9wHFOMfs2Y8'
-  let sm4 = new this.sm4({
+  let sm4fn = new this.sm4({
     key: key, // key
     mode: 'cbc',
     iv: 'UISwD9fW6cFh9SNS',
     cipherType: 'base64'
   })
-  return sm4.decrypt(decode)
+  return sm4fn.decrypt(decode)
 }
 /**
  * 加密didttm
@@ -157,39 +157,39 @@ function decryptDidttm (ct, key) {
  * @param  {[type]} key   [description]
  * @return {str}       [description]
  */
-function encryptDidttm (mtStr, key) {
-  if (typeof(mtStr) !== 'string') {
-    throw new Error('参数不是字符串')
-  }
-  key = 'JeF8U9wHFOMfs2Y8'
-  let sm4 = new this.sm4({
-    key: key,
-    mode: 'cbc',
-    iv: 'UISwD9fW6cFh9SNS',
-    cipherType: 'base64'
-  })
-  let ct = sm4.encrypt(mtStr)
-  let encode = Base64.encode(ct)
-  return encode
-}
+// function encryptDidttm (mtStr, key) {
+//   if (typeof(mtStr) !== 'string') {
+//     throw new Error('参数不是字符串')
+//   }
+//   key = 'JeF8U9wHFOMfs2Y8'
+//   let sm4fn = new this.sm4({
+//     key: key,
+//     mode: 'cbc',
+//     iv: 'UISwD9fW6cFh9SNS',
+//     cipherType: 'base64'
+//   })
+//   let ct = sm4fn.encrypt(mtStr)
+//   let encode = Base64.encode(ct)
+//   return encode
+// }
 /**
  * 获得pvdata
  * @return {[type]} [description]
  */
-function getPvData (did) {
-  let url = '/did/pvdata/' // + did
-  // console.log('url', url)
-  return instance({
-    // url: `/did/pvdata/${Base64.encode(did).substr(0, 8)}`,
-    // url: `/did/pvdata/${Base64.encode(did)}`,
-    // url: `/did/pvdata/${did}`,
-    url: url,
-    method: 'get',
-    params: {
-      did: did
-    }
-  })
-}
+// function getPvData (did) {
+//   let url = '/did/pvdata' // + did
+//   // console.log('url', url)
+//   return instance({
+//     // url: `/did/pvdata/${Base64.encode(did).substr(0, 8)}`,
+//     // url: `/did/pvdata/${Base64.encode(did)}`,
+//     // url: `/did/pvdata/${did}`,
+//     url: url,
+//     method: 'get',
+//     params: {
+//       did: did
+//     }
+//   })
+// }
 /**
  * 解密pvData
  * @param  {[type]} ct  [description]
@@ -276,6 +276,19 @@ function getTemplate (templateId) {
   })
 }
 /**
+ * 得到证书模板列表
+ * 暂时不需要参数
+ * @return {[type]} [description]
+ */
+function getTemplateList () {
+  return instance({
+    url: 'claim/templateList',
+    method: 'get',
+    params: {
+    }
+  })
+}
+/**
  * 验证身份证书
  * @return {[type]} [description]
  */
@@ -310,26 +323,26 @@ function cancelCheckCommonCertify () {}
  * @param  {[type]} claim_sn [description]
  * @return {[type]}          [description]
  */
-function cancelCertify (claim_sn, did, hashCont, endtime, pri) {
-  let keys = null
-  if (typeof(pri) === 'string') {
-    keys = sm2.genKeyPair(pri)
-  } else {
-    keys = pri
-  }
-  let sign = keys.signSha512(`${did}cancel${claim_sn}=${hashCont}end at${endtime}`)
-  return instance({
-    url: '/claim/cancel',
-    method: 'put',
-    data: {
-      did: did,
-      claim_sn: claim_sn,
-      hashCont: hashCont,
-      endtime: endtime,
-      sign: sign
-    }
-  })
-}
+// function cancelCertify (claim_sn, did, hashCont, endtime, pri) {
+//   let keys = null
+//   if (typeof(pri) === 'string') {
+//     keys = sm2.genKeyPair(pri)
+//   } else {
+//     keys = pri
+//   }
+//   let sign = keys.signSha512(`${did}cancel${claim_sn}=${hashCont}end at${endtime}`)
+//   return instance({
+//     url: '/claim/cancel',
+//     method: 'put',
+//     data: {
+//       did: did,
+//       claim_sn: claim_sn,
+//       hashCont: hashCont,
+//       endtime: endtime,
+//       sign: sign
+//     }
+//   })
+// }
 /**
  * 获取签发证书页面的临时url
  * @param  {[type]} claim_sn    [description]
@@ -337,17 +350,17 @@ function cancelCertify (claim_sn, did, hashCont, endtime, pri) {
  * @param  {[type]} certifyData [description]
  * @return {[type]}             [description]
  */
-function certifySignUrl (claim_sn, templateId, certifyData) {
-  return instance({
-    url: '/claim/certifySignUrl',
-    method: 'post',
-    data: {
-      claim_sn: claim_sn,
-      templateId: templateId,
-      certifyData: certifyData
-    }
-  })
-}
+// function certifySignUrl (claim_sn, templateId, certifyData) {
+//   return instance({
+//     url: '/claim/certifySignUrl',
+//     method: 'post',
+//     data: {
+//       claim_sn: claim_sn,
+//       templateId: templateId,
+//       certifyData: certifyData
+//     }
+//   })
+// }
 /**
  * 获取签发证书页面的数据
  * @param  {[type]} certifySignUuid [description]
@@ -367,22 +380,22 @@ function getCertifySignData (certifySignUuid) {
  * @param  {[type]} certifySignUuid [description]
  * @return {[type]}                 [description]
  */
-function signCertify(did, claim_sn, templateId, hashValue, endTime, sign) {
-  return instance({
-    url: '/claim/validate',
-    method: 'post',
-    data: {
-      did: did,
-      claim_sn: claim_sn,
-      templateId: templateId,
-      hashValue: hashValue,
-      endTime: endTime,
-      sign: sign
-    }
-  })
-}
+// function signCertify(did, claim_sn, templateId, hashValue, endTime, sign) {
+//   return instance({
+//     url: '/claim/validate',
+//     method: 'post',
+//     data: {
+//       did: did,
+//       claim_sn: claim_sn,
+//       templateId: templateId,
+//       hashValue: hashValue,
+//       endTime: endTime,
+//       sign: sign
+//     }
+//   })
+// }
 /**
- * 把byte型的数据 => 16进制的字符串
+ * 把byte型的数组 => 16进制的字符串
  * @param  {[type]} arr [description]
  * @return {[type]}     [description]
  */
@@ -397,19 +410,32 @@ function bytesToStrHex(arr) {
   }
   return str
 }
-function setTemporaryCertifyData (claim_sn, templateId, certifyData, expire, purpose) {
-  return instance({
-    url: '/claim/temporaryCertifyData',
-    method: 'post',
-    data: {
-      claim_sn: claim_sn,
-      templateId: templateId,
-      certifyData: certifyData,
-      expire: expire,
-      purpose: purpose
-    }
-  })
-}
+/**
+ * 保存证书的临时数据
+ * @param {[type]} claim_sn    [description]
+ * @param {[type]} templateId  [description]
+ * @param {[type]} certifyData [description]
+ * @param {[type]} expire      [description]
+ * @param {[type]} purpose     [description]
+ */
+// function setTemporaryCertifyData (claim_sn, templateId, certifyData, expire, purpose) {
+//   return instance({
+//     url: '/claim/temporaryCertifyData',
+//     method: 'post',
+//     data: {
+//       claim_sn: claim_sn,
+//       templateId: templateId,
+//       certifyData: certifyData,
+//       expire: expire,
+//       purpose: purpose
+//     }
+//   })
+// }
+/**
+ * 得到证书的临时数据
+ * @param  {[type]} temporaryID [description]
+ * @return {[type]}             [description]
+ */
 function getTemporaryCertifyData (temporaryID) {
   return instance({
     url: '/claim/temporaryCertifyData',
@@ -459,27 +485,28 @@ export default {
   sm4,
   getDidttm,
   decryptDidttm,
-  encryptDidttm,
-  getPvData,
+  // encryptDidttm,
+  // getPvData,
   decryptPvData,
   getDidList,
   getCheckCode,
 
   bytesToStrHex,
-  setTemporaryCertifyData,
+  // setTemporaryCertifyData,
   getTemporaryCertifyData,
   createIdCertify,
   getCertifyFingerPrint,
   getTemplate,
+  getTemplateList,
   validateIdCertify,
   cancelIdCertify,
   createCommonCertify,
   validateCommonCertify,
   checkCommonCertify,
   cancelCheckCommonCertify,
-  cancelCertify,
-  certifySignUrl,
+  // cancelCertify,
+  // certifySignUrl,
   getCertifySignData,
-  signCertify,
-  genKey
+  // signCertify,
+  // genKey
 }
