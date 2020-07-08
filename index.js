@@ -7,6 +7,8 @@ const sm4 = require('gm-crypt').sm4;
 import instance from './lib/instanceAxios'
 import utils from './lib/utils'
 import {Base64} from 'js-base64'
+import ecdsa from './lib/ecdsa'
+import {SHA3, Keccak, SHAKE} from 'sha3' // 使用外部引入的
 
 var hashStr = 'c888c9ce9e098d5864d3ded6ebcc140a12142263bace3a23a36f9905f12bd64a' // 与go代码里一样的字符串
 var priStr = '55c974f17a0b44178d982dcd478150b8a4c0f206f397d7880d06bf5a72932b81'
@@ -252,13 +254,19 @@ function createIdCertify () {
  * @param  {[type]} claim_sn [description]
  * @return {[type]}          [description]
  */
-function getCertifyFingerPrint (claim_sn) {
+function getCertifyFingerPrint (claim_sn, isShow) {
+  // return instance({
+  //   url: '/claim/fingerprint',
+  //   method: 'get',
+  //   params: {
+  //     claim_sn: claim_sn
+  //   }
+  // })
   return instance({
-    url: '/claim/fingerprint',
-    method: 'get',
-    params: {
-      claim_sn: claim_sn
-    }
+    url: '',
+    method: 'post',
+    // data: {"jsonrpc":"2.0","method":"ma_getMetainfo","params":[templateId],"id":1}
+    data: {"jsonrpc":"2.0","method":"cer_getCertifyById","params":[claim_sn, isShow],"id":1}
   })
 }
 /**
@@ -267,12 +275,17 @@ function getCertifyFingerPrint (claim_sn) {
  * @return {[type]}            [description]
  */
 function getTemplate (templateId) {
+  // return instance({
+  //   url: '/claim/template',
+  //   method: 'get',
+  //   params: {
+  //     templateId: templateId
+  //   }
+  // })
   return instance({
-    url: '/claim/template',
-    method: 'get',
-    params: {
-      templateId: templateId
-    }
+    url: '',
+    method: 'post',
+    data: {"jsonrpc":"2.0","method":"ma_getMetainfo","params":[templateId],"id":1}
   })
 }
 /**
@@ -483,6 +496,10 @@ export default {
   sm2,
   sm3,
   sm4,
+  SHA3,
+  Keccak,
+  SHAKE,
+  ecdsa,
   getDidttm,
   decryptDidttm,
   // encryptDidttm,
@@ -508,5 +525,6 @@ export default {
   // certifySignUrl,
   getCertifySignData,
   // signCertify,
-  // genKey
+  // genKey,
+  utils
 }
