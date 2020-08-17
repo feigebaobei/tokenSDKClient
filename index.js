@@ -2,7 +2,11 @@
 const sm = require('./lib/index.js')
 // const axios = require('axios')
 // const sm4 = require('sm-crypto').sm4;
-const sm4 = require('gm-crypt').sm4;
+// const sm4 = require('gm-crypt').sm4;
+// const sm4 = require('./lib/sm4.js')
+// const sm4 = import('./lib/sm4.js')
+import sm4 from './lib/sm4.js'
+// console.log(sm4)
 // const instance = require('./lib/instanceAxios')
 import instance from './lib/instanceAxios'
 import utils from './lib/utils'
@@ -497,6 +501,39 @@ function getTemporaryCertifyData (temporaryID) {
 //   genKey
 // }
 
+// keccak(256)的哈希方法
+function hashKeccak256 (msg, format = 'hex') {
+  let hash = new Keccak(256)
+  let msgs = []
+  if (typeof(msg) === 'string') {
+    msgs.push(msg)
+  }
+  for (let i = 0, iLen = msgs.length; i < iLen; i++) {
+    hash.update(msgs[i])
+  }
+  let hashStr = hash.digest(format)
+  hash.reset()
+  return hashStr
+}
+
+// 从远端拉取数据
+function pullBackupData (key, needHask = true) {
+  if (needHask) {
+    key = hashKeccak256(key)
+  }
+  return instance({
+    url: '',
+    method: 'post',
+    data: {
+      jsonrpc: '2.0',
+      method: 'dp_getDepository',
+      params: [key],
+      id: 1
+    }
+  })
+}
+
+
 export default {
   main,
   test0,
@@ -538,5 +575,7 @@ export default {
   getCertifySignData,
   // signCertify,
   // genKey,
-  utils
+  utils,
+  hashKeccak256,
+  pullBackupData
 }
