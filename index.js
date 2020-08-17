@@ -210,6 +210,17 @@ function decryptPvData (ct, pri) {
   mt = JSON.parse(mt)
   return mt
 }
+
+// 解密图片
+let decryptPic = function (picCt, priStr) {
+  priStr = priStr.indexOf('0x') === 0 ? priStr.slice(2) : priStr
+  let ct = utils.hexStrToArr(picCt)
+  let mt = sm4.decrypt(ct, priStr, {hashKey: true})
+  // console.log('mt', mt)
+  return mt
+  // return encode(mt)
+}
+
 /**
  * 获得didList
  * @param  {[type]} phone [description]
@@ -505,6 +516,7 @@ export default {
   // encryptDidttm,
   // getPvData,
   decryptPvData,
+  decryptPic,
   getDidList,
   getCheckCode,
 

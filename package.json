@@ -1,6 +1,6 @@
 {
   "name": "token-sdk-client",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "token sdk client description.",
   "main": "index.js",
   "directories": {
@@ -26,6 +26,7 @@
   },
   "dependencies": {
     "axios": "^0.19.2",
+    "bytecode": "^1.1.0",
     "elliptic": "^6.5.2",
     "gm-crypt": "0.0.2",
     "hash.js": "^1.1.7",
